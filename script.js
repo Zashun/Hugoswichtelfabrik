@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-// Firebase Konfiguration bleibt gleich...
+// Firebase Konfiguration
 const firebaseConfig = {
     apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo",
     authDomain: "wichteln-94d95.firebaseapp.com",
@@ -16,9 +16,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Globale Variablen bleiben gleich...
+// Globale Variablen
 let currentUser = null;
-const totalUsers = 18;
 const names = [
     "Basti", "Julia", "Dirk", "Steh-Vieh", "Romy",
     "Christian", "Lina", "Moritz", "Sissi", "Bartosz",
@@ -28,7 +27,6 @@ const names = [
 
 // Funktion zur Generierung einer UUID
 function generateUUID() {
-    // Einfacher Platzhalter für die UUID-Generierung
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = Math.random() * 16 | 0,
               v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -38,11 +36,10 @@ function generateUUID() {
 
 // Funktion zur Generierung der Buchstaben
 function generateLetters() {
-    // Hier kannst du die Logik zur Generierung der Buchstaben hinzufügen,
-    // oder einfach einen Platzhalter setzen, wenn es nur um das Debugging geht
     console.log("Buchstaben wurden generiert (Platzhalter).");
 }
 
+// Event-Listener für Briefe hinzufügen
 function attachLetterEvents() {
     const letterElements = document.querySelectorAll('.letter'); // Angenommen, die Briefe haben die Klasse 'letter'
     letterElements.forEach(letterElement => {
@@ -52,6 +49,7 @@ function attachLetterEvents() {
     });
 }
 
+// Geladene Briefe abrufen
 async function loadOpenedLetters() {
     try {
         const openedLettersRef = ref(db, 'openedLetters');
@@ -59,8 +57,6 @@ async function loadOpenedLetters() {
         
         if (snapshot.exists()) {
             const openedLetters = snapshot.val();
-            // Hier kannst du die Logik hinzufügen, um die geöffneten Briefe darzustellen
-            // Beispiel: Briefe hervorheben, die bereits geöffnet wurden
             for (const [letterId, isOpened] of Object.entries(openedLetters)) {
                 if (isOpened) {
                     const letterElement = document.querySelector(`.letter[data-index="${letterId}"]`);
@@ -74,7 +70,6 @@ async function loadOpenedLetters() {
         console.error("Fehler beim Laden der geöffneten Briefe:", error);
     }
 }
-
 
 // DOM-Elemente
 const userDropdown = document.getElementById('user-dropdown');
@@ -101,43 +96,40 @@ async function checkUserSelection(userName) {
         const userRef = ref(db, 'users/' + userName);
         const snapshot = await get(userRef);
 
-        // Debugging: Überprüfe, ob der Snapshot existiert und was die Daten sind
-        console.log('Benutzerreferenz:', userRef.toString()); // Zeigt die vollständige Referenz an
-        console.log('Snapshot existiert:', snapshot.exists()); // Prüfe, ob der Snapshot existiert
+        console.log('Benutzerreferenz:', userRef.toString());
+        console.log('Snapshot existiert:', snapshot.exists());
         if (snapshot.exists()) {
-            console.log('Daten im Snapshot:', snapshot.val()); // Zeigt die Daten im Snapshot an
+            console.log('Daten im Snapshot:', snapshot.val());
         } else {
             console.log('Der Benutzer existiert nicht.');
         }
 
-        return snapshot.exists() && snapshot.val().selected; // Überprüfe, ob der Benutzer ausgewählt wurde
+        return snapshot.exists() && snapshot.val().selected;
     } catch (error) {
         console.error("Fehler beim Prüfen der Benutzerauswahl:", error);
         return false;
     }
 }
 
-
-// Benutzer bestätigen - überarbeitete Version
+// Benutzer bestätigen
 async function confirmUser() {
     const selectedUser = userDropdown.value;
-    console.log('Ausgewählter Benutzer:', selectedUser); // Debugging
+    console.log('Ausgewählter Benutzer:', selectedUser);
     if (!selectedUser) {
         alert('Bitte wähle einen Namen');
         return;
     }
 
     try {
-        // Prüfen, ob der Benutzer bereits ausgewählt wurde
         const isSelected = await checkUserSelection(selectedUser);
-        console.log('Ist ausgewählt:', isSelected); // Debugging
+        console.log('Ist ausgewählt:', isSelected);
         if (isSelected) {
             alert('Dieser Name wurde bereits ausgewählt');
             return;
         }
 
         const uuid = generateUUID();
-        console.log('Generierte UUID:', uuid); // Debugging
+        console.log('Generierte UUID:', uuid);
         const userRef = ref(db, 'users/' + selectedUser);
 
         await set(userRef, {
@@ -156,7 +148,7 @@ async function confirmUser() {
     }
 }
 
-// Initialisierung der Datenbank - überarbeitete Version
+// Initialisierung der Datenbank
 async function initializeDatabase() {
     try {
         const lettersRef = ref(db, 'letters');
@@ -174,7 +166,6 @@ async function initializeDatabase() {
             await set(lettersRef, assignments);
         }
 
-        // Überprüfe und initialisiere openedLetters, falls nicht vorhanden
         const openedLettersRef = ref(db, 'openedLetters');
         const openedSnapshot = await get(openedLettersRef);
         if (!openedSnapshot.exists()) {
@@ -185,9 +176,7 @@ async function initializeDatabase() {
     }
 }
 
-// Rest der Funktionen bleiben größtenteils gleich...
-// Nur kleine Änderungen in der openLetter Funktion
-
+// Brief öffnen
 async function openLetter(letterElement, userName) {
     try {
         const hasOpenedLetter = await checkOpenedLetter(userName);
@@ -210,13 +199,11 @@ async function openLetter(letterElement, userName) {
         if (partnerName) {
             letterElement.classList.add('opened');
             
-            // Update user status
             await update(ref(db, 'users/' + userName), {
                 letterOpened: true,
                 openedLetterId: letterElement.dataset.index
             });
 
-            // Update opened letters
             const openedLettersRef = ref(db, 'openedLetters');
             await update(openedLettersRef, {
                 [letterElement.dataset.index]: true
@@ -241,8 +228,8 @@ async function initialize() {
         await initializeDatabase();
         populateDropdown();
         generateLetters();
-        attachLetterEvents();
         await loadOpenedLetters();
+        attachLetterEvents(); // Sicherstellen, dass Briefe nach dem Laden angehängt werden
     } catch (error) {
         console.error("Fehler bei der Initialisierung:", error);
     }
