@@ -10,44 +10,43 @@ const participants = [
 const letters = Array.from(document.querySelectorAll('.letter'));
 const assignedNames = {};
 
-// Überprüfen, ob es bereits gezogene Namen gibt und die Namen aus localStorage laden
-const loadedNames = JSON.parse(localStorage.getItem('assignedNames')) || {};
-Object.assign(assignedNames, loadedNames);
+// Funktion, um einen Namen im Modal anzuzeigen
+function showModal(name) {
+    const modal = document.getElementById('modal');
+    const resultText = document.getElementById('resultText');
 
-// Funktion, um einen zufälligen Namen zu wählen
-function getRandomName() {
-    const availableNames = participants.filter(name => !Object.values(assignedNames).includes(name));
-    if (availableNames.length === 0) return null; // Keine verfügbaren Namen
-    const randomIndex = Math.floor(Math.random() * availableNames.length);
-    return availableNames[randomIndex];
+    resultText.textContent = name; // Den Namen im Modal setzen
+    modal.style.display = 'block'; // Modal anzeigen
 }
 
 // Event-Listener für die Briefe
-letters.forEach((letter, index) => {
-    // Überprüfen, ob der Brief bereits zugewiesen wurde
-    if (assignedNames[index]) {
-        letter.textContent = assignedNames[index]; // Name auf dem Brief anzeigen
-        letter.style.pointerEvents = 'none'; // Briefe nicht mehr klickbar machen
-    }
-
-    letter.addEventListener('click', function() {
+letters.forEach(letter => {
+    letter.addEventListener('click', async function() {
+        const letterIndex = letters.indexOf(this);
+        
         // Überprüfen, ob der Brief schon geöffnet wurde
-        if (assignedNames[index]) {
+        const response = await fetch('http://localhost:3000/drawings');
+        const data = await response.json();
+        if (data[letterIndex]) {
             alert("Dieser Brief wurde bereits geöffnet!");
             return;
         }
 
         // Zuweisung eines Namens
-        const recipient = getRandomName();
-        if (recipient) {
-            assignedNames[index] = recipient;
-            this.textContent = recipient; // Name auf dem Brief anzeigen
-            alert(`Du hast ${recipient} gezogen!`); // Nachricht an den Nutzer
-            
-            // Speichern der zugewiesenen Namen im localStorage
-            localStorage.setItem('assignedNames', JSON.stringify(assignedNames));
+        const recipientResponse = await fetch('http://localhost:3000/draw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ letterIndex })
+        });
+
+        const recipientData = await recipientResponse.json();
+        if (recipientResponse.ok) {
+            this.style.backgroundImage = "url('Brief offen.jfif')"; // Ändere das Bild des Briefs
+            showModal(recipientData.recipient); // Zeige das Modal mit dem Namen an
         } else {
-            alert("Es gibt keine verfügbaren Teilnehmer mehr.");
+            alert(recipientData.message); // Fehlermeldung anzeigen
         }
         
         // Briefe nicht mehr klickbar machen
@@ -56,3 +55,11 @@ letters.forEach((letter, index) => {
         });
     });
 });
+
+// Event-Listener für das Schließen des Modals
+window.onclick = function(event) {
+    const modal = document.getElementById('modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
