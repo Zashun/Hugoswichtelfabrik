@@ -8,52 +8,16 @@
 </head>
 <body>
     <h1>Familien-Wichteln</h1>
-    <p>Wähle deinen Namen aus:</p>
-    <select id="nameSelect">
-        <option value="">--Bitte auswählen--</option>
-        <option value="Basti">Basti</option>
-        <option value="Julia">Julia</option>
-        <option value="Dirk">Dirk</option>
-        <option value="Steh-Vieh">Steh-Vieh</option>
-        <option value="Romy">Romy</option>
-        <option value="Christian">Christian</option>
-        <option value="Lina">Lina</option>
-        <option value="Moritz">Moritz</option>
-        <option value="Sissi">Sissi</option>
-        <option value="Bartosz">Bartosz</option>
-        <option value="David">David</option>
-        <option value="Monika">Monika</option>
-        <option value="Sascha">Sascha</option>
-        <option value="Violetta">Violetta</option>
-        <option value="Sammy">Sammy</option>
-        <option value="Sven">Sven</option>
-        <option value="Angi">Angi</option>
-        <option value="Andrea">Andrea</option>
-    </select>
-    <button id="startButton">Loslegen</button>
-    
+    <p>Klicke auf einen Brief, um deinen Wichtelpartner zu ziehen.</p>
+
     <div id="tree">
+        <!-- Briefe für alle Teilnehmer -->
         <div class="letter" data-name="Basti"></div>
         <div class="letter" data-name="Julia"></div>
-        <div class="letter" data-name="Dirk"></div>
-        <div class="letter" data-name="Steh-Vieh"></div>
-        <div class="letter" data-name="Romy"></div>
-        <div class="letter" data-name="Christian"></div>
-        <div class="letter" data-name="Lina"></div>
-        <div class="letter" data-name="Moritz"></div>
-        <div class="letter" data-name="Sissi"></div>
-        <div class="letter" data-name="Bartosz"></div>
-        <div class="letter" data-name="David"></div>
-        <div class="letter" data-name="Monika"></div>
-        <div class="letter" data-name="Sascha"></div>
-        <div class="letter" data-name="Violetta"></div>
-        <div class="letter" data-name="Sammy"></div>
-        <div class="letter" data-name="Sven"></div>
-        <div class="letter" data-name="Angi"></div>
-        <div class="letter" data-name="Andrea"></div>
+        <!-- Weitere Briefe hier... -->
     </div>
 
-    <!-- Rotes Hintergrundfenster für die Anzeige -->
+    <!-- Modal für die Anzeige des gezogenen Namens -->
     <div class="modal" id="resultModal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
@@ -82,27 +46,15 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Teilnehmernamen
-        const participants = [
-            "Basti", "Julia", "Dirk", "Steh-Vieh", "Romy", 
-            "Christian", "Lina", "Moritz", "Sissi", "Bartosz", 
-            "David", "Monika", "Sascha", "Violetta", "Sammy", 
-            "Sven", "Angi", "Andrea"
-        ];
-
-        // Briefe und Status
+        // Teilnehmerliste
+        const participants = ["Basti", "Julia", "Dirk", "Steh-Vieh", "Romy", "Christian", "Lina", "Moritz", "Sissi", "Bartosz", "David", "Monika", "Sascha", "Violetta", "Sammy", "Sven", "Angi", "Andrea"];
         const letters = Array.from(document.querySelectorAll('.letter'));
-        const assignedNames = {};
 
-        // Funktion, um einen zufälligen Namen zu wählen
-        function getRandomName(exclude) {
-            const availableNames = participants.filter(name => name !== exclude);
-            if (availableNames.length === 0) return null; // Keine verfügbaren Namen
-            const randomIndex = Math.floor(Math.random() * availableNames.length);
-            return availableNames[randomIndex];
-        }
+        // Einzigartige Geräte-ID abrufen und speichern
+        const deviceId = localStorage.getItem("deviceId") || crypto.randomUUID();
+        localStorage.setItem("deviceId", deviceId);
 
-        // Modal-Funktionen
+        // Modal-Logik
         const modal = document.getElementById("resultModal");
         const resultText = document.getElementById("resultText");
         const closeModal = document.getElementById("closeModal");
@@ -111,83 +63,40 @@
             resultText.textContent = `Du hast ${name} gezogen!`;
             modal.style.display = "block";
         }
-
-        closeModal.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Ergebnisse speichern
-        function saveDrawResult(participantId, name) {
-            set(ref(database, 'draws/' + participantId), {
-                name: name
-            });
-        }
-
-        // Ziehungen überprüfen
-        function checkDraw(participantId) {
-            const dbRef = ref(database);
-            get(child(dbRef, 'draws/' + participantId)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    openModal(snapshot.val().name); // Name anzeigen
-                } else {
-                    drawNewName(participantId); // Neuen Namen ziehen
-                }
-            }).catch((error) => {
-                console.error("Error getting data:", error);
-            });
-        }
-
-        function drawNewName(participantId) {
-            const selectedName = localStorage.getItem('selectedName');
-            const recipient = getRandomName(selectedName);
-            if (recipient) {
-                assignedNames[participantId] = recipient;
-                saveDrawResult(participantId, recipient); // Ergebnis speichern
-                openModal(recipient); // Modal öffnen
-            } else {
-                alert("Es gibt keine verfügbaren Teilnehmer mehr.");
-            }
-
-            // Briefe nicht mehr klickbar machen
-            letters.forEach(l => {
-                l.style.pointerEvents = 'none';
-            });
-        }
-
-        // Event-Listener für den Start-Button
-        document.getElementById('startButton').addEventListener('click', () => {
-            const selectedName = document.getElementById('nameSelect').value;
-
-            if (!selectedName) {
-                alert('Bitte wähle deinen Namen aus!');
-                return;
-            }
-
-            // Speichere den Namen in Local Storage
-            localStorage.setItem('selectedName', selectedName);
-            alert(`Du hast ${selectedName} gewählt! Klicke auf einen Brief, um deinen Wichtelpartner zu ziehen.`);
-        });
-
-        // Event-Listener für die Briefe
-        letters.forEach((letter, index) => {
-            letter.addEventListener('click', function() {
-                checkDraw(index); // Überprüfen und ggf. ziehen
-            });
-        });
-
-        // Beim Laden der Seite überprüfen, ob ein Name ausgewählt wurde
-        window.onload = () => {
-            const selectedName = localStorage.getItem('selectedName');
-            if (selectedName) {
-                alert(`Willkommen zurück, ${selectedName}!`);
-            }
+        
+        closeModal.onclick = () => modal.style.display = "none";
+        
+        window.onclick = (event) => { 
+            if (event.target === modal) modal.style.display = "none"; 
         };
+
+        // Prüfen und Ziehen
+        function checkOrDraw() {
+            const dbRef = ref(database);
+            get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    openModal(snapshot.val().name); // Bereits gezogener Name
+                } else {
+                    drawNewName(); // Neuer Name
+                }
+            }).catch((error) => console.error("Fehler: ", error));
+        }
+
+        // Funktion für Ziehungen und Speicherung
+        function drawNewName() {
+            const recipient = participants[Math.floor(Math.random() * participants.length)];
+            saveDrawResult(recipient);
+            openModal(recipient);
+            letters.forEach(l => l.style.pointerEvents = 'none');
+        }
+
+        // Ergebnis speichern
+        function saveDrawResult(name) {
+            set(ref(database, 'draws/' + deviceId), { name: name });
+        }
+
+        // Beim Laden der Seite starten
+        window.onload = checkOrDraw;
     </script>
 </body>
 </html>
