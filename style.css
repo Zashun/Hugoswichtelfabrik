@@ -1,37 +1,37 @@
-/* Container für alle Briefe */
-#brief-container {
-    position: relative;
-    width: 100%;
-    height: 100vh; /* Nimmt die gesamte Höhe des Browserfensters ein */
-    overflow: hidden; /* Verhindert Scrollen, falls ein Brief über den Rand hinaus positioniert wird */
-    background-image: url('./Hintergrund.png'); /* Setzt das Hintergrundbild */
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('Hintergrund.jpg');
     background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
 }
 
-/* Stil für die einzelnen Briefe */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#brief-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 Spalten */
+    gap: 20px; /* Abstand zwischen den Briefen */
+    margin-top: 20px;
+}
+
 .brief {
-    position: absolute; /* Ermöglicht zufällige Positionierung */
-    width: 100px; /* Festgelegte Breite der Briefe */
-    height: 100px; /* Festgelegte Höhe der Briefe */
-    background-size: cover; /* Sorgt dafür, dass das Bild den gesamten Brief ausfüllt */
-    transition: transform 0.3s ease; /* Weicher Übergangseffekt beim Hover */
-    cursor: pointer; /* Zeigt den Mauszeiger als Hand an */
+    background-image: url('Brief zu.png');
+    background-size: cover;
+    width: 150%;
+    height: 100px; /* Höhe der Briefe */
+    cursor: pointer;
+    transition: transform 0.3s;
 }
 
-/* Hover-Effekt für die Briefe */
 .brief:hover {
-    transform: scale(1.2); /* Vergrößert den Brief beim Hover */
+    transform: scale(1.05); /* Vergrößerungseffekt beim Hover */
 }
 
-/* Optional: Stil für den geöffneten Brief */
-.brief-offen {
-    background-image: url('./Brief auf.png'); /* Bild für geöffneten Brief */
-}
-
-/* Optional: Stil für den geschlossenen Brief */
-.brief-zu {
-    background-image: url('./Brief zu.png'); /* Bild für geschlossenen Brief */
+.brief.offen {
+    background-image: url('Brief auf.png'); /* Hintergrund für offene Briefe */
 }
