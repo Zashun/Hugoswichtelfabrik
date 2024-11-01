@@ -40,12 +40,6 @@ body {
     transform: scale(1.2); /* Vergrößern beim Hover */
 }
 
-/* Mobile Optimierung */
-@media (max-width: 600px) {
-    h1 { font-size: 2em; }
-    .letter { width: 80px; height: 120px; font-size: 1em; }
-}
-
 /* Modal-Stil */
 .modal {
     display: none; /* Versteckt das Modal standardmäßig */
@@ -61,17 +55,19 @@ body {
     text-align: center; /* Text zentrieren */
 }
 
-/* Schließen-Button */
-.close {
-    color: white; /* Farbe des Schließen-Buttons */
-    float: right; /* Rechts ausrichten */
-    font-size: 28px; /* Schriftgröße */
-    font-weight: bold; /* Fettdruck */
+/* Inhalt des Modals */
+.modal-content {
+    background-color: red; /* Hintergrundfarbe des Inhalts */
+    margin: 15% auto; /* Abstand oben und unten */
+    padding: 20px; /* Abstand innerhalb des Inhalts */
+    border: 1px solid #888; /* Rahmen */
+    width: 80%; /* Breite des Modals */
+    max-width: 500px; /* Maximalbreite des Modals */
+    border-radius: 10px; /* Abgerundete Ecken */
 }
 
-.close:hover,
-.close:focus {
-    color: #f1f1f1; /* Farbe beim Hover */
-    text-decoration: none; /* Unterstreichung entfernen */
-    cursor: pointer; /* Zeiger ändern */
+/* Mobile Optimierung */
+@media (max-width: 600px) {
+    h1 { font-size: 2em; }
+    .letter { width: 80px; height: 120px; font-size: 1em; }
 }
