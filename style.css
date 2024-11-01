@@ -75,7 +75,7 @@ h1 {
 
 /* Benutzerauswahl-Modal immer anzeigen */
 #user-selection.modal {
-    display: block !important;
+    display: block;
 }
 
 .modal-content {
