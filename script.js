@@ -16,9 +16,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const uuid = generateUUID();
-const briefContainer = document.querySelector('.brief-container');
+const briefContainer = document.getElementById('brief-container');
 const namen = ["Basti", "Julia", "Dirk", "Steh-Vieh", "Romy", "Christian", "Lina", "Moritz", "Sissi", "Bartosz", "David", "Monika", "Sascha", "Violetta", "Sammy", "Sven", "Angi", "Andrea"];
-const gezogen = [];
+const MIN_DISTANCE = 120;
 
 // Hilfsfunktion, um eine UUID zu generieren
 function generateUUID() {
@@ -29,15 +29,40 @@ function generateUUID() {
     });
 }
 
-// Briefe initialisieren
+// Briefe initialisieren und zufällig platzieren
 function loadBriefe() {
+    const briefPositions = [];
+    
     for (let i = 0; i < namen.length; i++) {
-        const brief = document.createElement('div');
-        brief.classList.add('brief');
+        const brief = document.createElement("div");
+        brief.classList.add("brief", "brief-zu");
         brief.dataset.index = i;
-        brief.addEventListener('click', () => zieheBrief(i));
+
+        // Zufällige, nicht überlappende Position finden
+        let position;
+        do {
+            position = {
+                x: Math.floor(Math.random() * (briefContainer.offsetWidth - 100)),
+                y: Math.floor(Math.random() * (briefContainer.offsetHeight - 100))
+            };
+        } while (!isPositionValid(position, briefPositions));
+
+        brief.style.left = `${position.x}px`;
+        brief.style.top = `${position.y}px`;
+        briefPositions.push(position);
+
+        brief.addEventListener("click", () => zieheBrief(i));
         briefContainer.appendChild(brief);
     }
+}
+
+// Funktion zur Überprüfung, ob eine Position ohne Überlappung gültig ist
+function isPositionValid(position, positions) {
+    return positions.every(pos => {
+        const dx = pos.x - position.x;
+        const dy = pos.y - position.y;
+        return Math.sqrt(dx * dx + dy * dy) >= MIN_DISTANCE;
+    });
 }
 
 // Prüfen und Ziehen des Briefs
@@ -51,15 +76,14 @@ async function zieheBrief(index) {
     }
 
     const gewaehlterName = namen[index];
-    gespeichert = true;
-    gezogen.push(index);
 
     // Brief anzeigen und in der Datenbank speichern
-    document.querySelector(`.brief[data-index="${index}"]`).classList.add('offen');
+    document.querySelector(`.brief[data-index="${index}"]`).classList.remove('brief-zu');
+    document.querySelector(`.brief[data-index="${index}"]`).classList.add('brief-offen');
     await set(ref(db, `gezogen/${index}`), { uuid, name: gewaehlterName });
-    
+
     alert(`Dein Wichtelpartner ist: ${gewaehlterName}`);
 }
 
-// Briefe laden
-loadBriefe();
+// Lädt die Briefe, sobald die Seite geladen ist
+document.addEventListener("DOMContentLoaded", loadBriefe);
