@@ -43,6 +43,38 @@ function generateLetters() {
     console.log("Buchstaben wurden generiert (Platzhalter).");
 }
 
+function attachLetterEvents() {
+    const letterElements = document.querySelectorAll('.letter'); // Angenommen, die Briefe haben die Klasse 'letter'
+    letterElements.forEach(letterElement => {
+        letterElement.addEventListener('click', () => {
+            openLetter(letterElement, currentUser);
+        });
+    });
+}
+
+async function loadOpenedLetters() {
+    try {
+        const openedLettersRef = ref(db, 'openedLetters');
+        const snapshot = await get(openedLettersRef);
+        
+        if (snapshot.exists()) {
+            const openedLetters = snapshot.val();
+            // Hier kannst du die Logik hinzufügen, um die geöffneten Briefe darzustellen
+            // Beispiel: Briefe hervorheben, die bereits geöffnet wurden
+            for (const [letterId, isOpened] of Object.entries(openedLetters)) {
+                if (isOpened) {
+                    const letterElement = document.querySelector(`.letter[data-index="${letterId}"]`);
+                    if (letterElement) {
+                        letterElement.classList.add('opened'); // Angenommen, 'opened' hebt den Brief hervor
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Fehler beim Laden der geöffneten Briefe:", error);
+    }
+}
+
 
 // DOM-Elemente
 const userDropdown = document.getElementById('user-dropdown');
