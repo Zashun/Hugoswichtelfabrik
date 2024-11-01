@@ -3,47 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Familien Wichteln</title>
     <link rel="stylesheet" href="style.css">
-    <title>Wichteln</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script src="script.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-database.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Wichteln</h1>
-        <label for="userSelect">Wähle deinen Namen:</label>
-        <select id="userSelect">
-            <option value="">--Bitte wählen--</option>
-            <option value="Basti">Basti</option>
-            <option value="Julia">Julia</option>
-            <option value="Dirk">Dirk</option>
-            <option value="Steh-Vieh">Steh-Vieh</option>
-            <option value="Romy">Romy</option>
-            <option value="Christian">Christian</option>
-            <option value="Lina">Lina</option>
-            <option value="Moritz">Moritz</option>
-            <option value="Sissi">Sissi</option>
-            <option value="Bartosz">Bartosz</option>
-            <option value="David">David</option>
-            <option value="Monika">Monika</option>
-            <option value="Sascha">Sascha</option>
-            <option value="Violetta">Violetta</option>
-            <option value="Sammy">Sammy</option>
-            <option value="Sven">Sven</option>
-            <option value="Angi">Angi</option>
-            <option value="Andrea">Andrea</option>
-        </select>
-        <button id="confirmButton">Bestätigen</button>
-
-        <div id="letters">
-            <!-- Briefe werden hier dynamisch hinzugefügt -->
-        </div>
-    </div>
-    <div id="nameModal" class="modal">
-        <div class="modal-content">
-            <span id="closeModal" class="close">&times;</span>
-            <p id="nameDisplay"></p>
+        <h1>Familien Wichteln</h1>
+        <p>Klicke auf einen Brief, um deinen Wichtelpartner zu ziehen.</p>
+        <div class="brief-container">
+            <!-- Hier werden die 18 Briefe dynamisch geladen -->
         </div>
     </div>
 </body>
