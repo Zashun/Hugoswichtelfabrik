@@ -83,5 +83,5 @@ body {
 /* Mobile Optimierung */
 @media (max-width: 600px) {
     h1 { font-size: 2em; }
-    .letter { width: 80px; height: 120px; font-size: 1em; }
+    .letter { width: 100px; height: 80px; font-size: 1em; }
 }
