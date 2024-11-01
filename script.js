@@ -50,30 +50,44 @@ async function checkUserSelection(userName) {
     try {
         const userRef = ref(db, 'users/' + userName);
         const snapshot = await get(userRef);
-        return snapshot.exists() && snapshot.val().selected;
+
+        // Debugging: Überprüfe, ob der Snapshot existiert und was die Daten sind
+        console.log('Benutzerreferenz:', userRef.toString()); // Zeigt die vollständige Referenz an
+        console.log('Snapshot existiert:', snapshot.exists()); // Prüfe, ob der Snapshot existiert
+        if (snapshot.exists()) {
+            console.log('Daten im Snapshot:', snapshot.val()); // Zeigt die Daten im Snapshot an
+        } else {
+            console.log('Der Benutzer existiert nicht.');
+        }
+
+        return snapshot.exists() && snapshot.val().selected; // Überprüfe, ob der Benutzer ausgewählt wurde
     } catch (error) {
         console.error("Fehler beim Prüfen der Benutzerauswahl:", error);
         return false;
     }
 }
 
+
 // Benutzer bestätigen - überarbeitete Version
 async function confirmUser() {
     const selectedUser = userDropdown.value;
+    console.log('Ausgewählter Benutzer:', selectedUser); // Debugging
     if (!selectedUser) {
         alert('Bitte wähle einen Namen');
         return;
     }
 
     try {
-        // Prüfen ob der Benutzer bereits ausgewählt wurde
+        // Prüfen, ob der Benutzer bereits ausgewählt wurde
         const isSelected = await checkUserSelection(selectedUser);
+        console.log('Ist ausgewählt:', isSelected); // Debugging
         if (isSelected) {
             alert('Dieser Name wurde bereits ausgewählt');
             return;
         }
 
         const uuid = generateUUID();
+        console.log('Generierte UUID:', uuid); // Debugging
         const userRef = ref(db, 'users/' + selectedUser);
 
         await set(userRef, {
