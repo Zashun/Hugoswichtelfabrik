@@ -8,7 +8,29 @@
 </head>
 <body>
     <h1>Familien-Wichteln</h1>
-    <p>Klicke auf einen Brief, um deinen Wichtelpartner zu ziehen!</p>
+    <p>Wähle deinen Namen aus:</p>
+    <select id="nameSelect">
+        <option value="">--Bitte auswählen--</option>
+        <option value="Basti">Basti</option>
+        <option value="Julia">Julia</option>
+        <option value="Dirk">Dirk</option>
+        <option value="Steh-Vieh">Steh-Vieh</option>
+        <option value="Romy">Romy</option>
+        <option value="Christian">Christian</option>
+        <option value="Lina">Lina</option>
+        <option value="Moritz">Moritz</option>
+        <option value="Sissi">Sissi</option>
+        <option value="Bartosz">Bartosz</option>
+        <option value="David">David</option>
+        <option value="Monika">Monika</option>
+        <option value="Sascha">Sascha</option>
+        <option value="Violetta">Violetta</option>
+        <option value="Sammy">Sammy</option>
+        <option value="Sven">Sven</option>
+        <option value="Angi">Angi</option>
+        <option value="Andrea">Andrea</option>
+    </select>
+    <button id="startButton">Loslegen</button>
     
     <div id="tree">
         <div class="letter" data-name="Basti"></div>
@@ -122,7 +144,8 @@
         }
 
         function drawNewName(participantId) {
-            const recipient = getRandomName(null);
+            const selectedName = localStorage.getItem('selectedName');
+            const recipient = getRandomName(selectedName);
             if (recipient) {
                 assignedNames[participantId] = recipient;
                 saveDrawResult(participantId, recipient); // Ergebnis speichern
@@ -137,12 +160,34 @@
             });
         }
 
+        // Event-Listener für den Start-Button
+        document.getElementById('startButton').addEventListener('click', () => {
+            const selectedName = document.getElementById('nameSelect').value;
+
+            if (!selectedName) {
+                alert('Bitte wähle deinen Namen aus!');
+                return;
+            }
+
+            // Speichere den Namen in Local Storage
+            localStorage.setItem('selectedName', selectedName);
+            alert(`Du hast ${selectedName} gewählt! Klicke auf einen Brief, um deinen Wichtelpartner zu ziehen.`);
+        });
+
         // Event-Listener für die Briefe
         letters.forEach((letter, index) => {
             letter.addEventListener('click', function() {
                 checkDraw(index); // Überprüfen und ggf. ziehen
             });
         });
+
+        // Beim Laden der Seite überprüfen, ob ein Name ausgewählt wurde
+        window.onload = () => {
+            const selectedName = localStorage.getItem('selectedName');
+            if (selectedName) {
+                alert(`Willkommen zurück, ${selectedName}!`);
+            }
+        };
     </script>
 </body>
 </html>
