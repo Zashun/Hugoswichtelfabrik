@@ -43,7 +43,7 @@ letters.forEach(letter => {
         const recipient = getRandomName(null);
         if (recipient) {
             assignedNames[letterIndex] = recipient;
-            this.style.backgroundImage = "url('Brief offen.jfif')"; // Brief wird offen
+            this.style.backgroundImage = "url('Brief offen.png')"; // Brief wird offen
             recipientName.textContent = recipient; // Name auf dem Modal anzeigen
             resultDiv.style.display = 'block'; // Modal anzeigen
             letters.forEach(l => {
