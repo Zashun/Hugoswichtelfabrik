@@ -29,7 +29,7 @@ body {
 }
 
 .brief:hover {
-    transform: scale(1.05); /* Vergrößerungseffekt beim Hover */
+    transform: scale(1.2); /* Vergrößerungseffekt beim Hover */
 }
 
 .brief.offen {
