@@ -36,24 +36,32 @@ const nameModal = document.getElementById('name-modal');
 const partnerNameElement = document.getElementById('partner-name');
 const closeNameModalBtn = document.querySelector('#name-modal .close');
 
+// Zeige das Benutzerauswahlmenü direkt an
+window.onload = function() {
+    userSelectionModal.style.display = 'block';
+};
+
 // Initialisiere die Datenbank beim ersten Laden
 async function initializeDatabase() {
-    const lettersRef = ref(db, 'letters');
-    const snapshot = await get(lettersRef);
-    
-    if (!snapshot.exists()) {
-        // Zufällige Zuordnung erstellen
-        const shuffledNames = [...names].sort(() => Math.random() - 0.5);
-        const assignments = {};
+    try {
+        const lettersRef = ref(db, 'letters');
+        const snapshot = await get(lettersRef);
         
-        names.forEach((name, index) => {
-            // Stelle sicher, dass niemand sich selbst zieht
-            let partnerIndex = (index + 1) % names.length;
-            assignments[name] = shuffledNames[partnerIndex];
-        });
-        
-        // In Firebase speichern
-        await set(lettersRef, assignments);
+        if (!snapshot.exists()) {
+            // Zufällige Zuordnung erstellen
+            const shuffledNames = [...names].sort(() => Math.random() - 0.5);
+            const assignments = {};
+            
+            names.forEach((name, index) => {
+                let partnerIndex = (index + 1) % names.length;
+                assignments[name] = shuffledNames[partnerIndex];
+            });
+            
+            // In Firebase speichern
+            await set(lettersRef, assignments);
+        }
+    } catch (error) {
+        console.error("Fehler bei der Datenbankinitialisierung:", error);
     }
 }
 
@@ -89,42 +97,41 @@ function generateUUID() {
 
 // Prüfen, ob Brief bereits geöffnet wurde
 async function checkOpenedLetter(userName) {
-    const userRef = ref(db, 'users/' + userName);
-    const snapshot = await get(userRef);
-    return snapshot.exists() && snapshot.val().letterOpened;
+    try {
+        const userRef = ref(db, 'users/' + userName);
+        const snapshot = await get(userRef);
+        return snapshot.exists() && snapshot.val().letterOpened;
+    } catch (error) {
+        console.error("Fehler beim Prüfen des geöffneten Briefes:", error);
+        return false;
+    }
 }
 
 // Brief öffnen
 async function openLetter(letterElement, userName) {
     try {
-        // Prüfe, ob der Benutzer bereits einen Brief geöffnet hat
         const hasOpenedLetter = await checkOpenedLetter(userName);
         if (hasOpenedLetter) {
             alert('Du hast bereits einen Brief geöffnet!');
             return;
         }
 
-        // Hole den Wichtelpartner aus der Datenbank
         const lettersRef = ref(db, 'letters');
         const snapshot = await get(lettersRef);
         const assignments = snapshot.val();
         const partnerName = assignments[userName];
 
         if (partnerName) {
-            // Brief als geöffnet markieren
             letterElement.classList.add('opened');
             
-            // In der Datenbank speichern, dass der Brief geöffnet wurde
             await update(ref(db, 'users/' + userName), {
                 letterOpened: true,
                 openedLetterId: letterElement.dataset.index
             });
 
-            // Partner-Namen anzeigen
             partnerNameElement.textContent = partnerName;
             nameModal.style.display = 'block';
 
-            // Speichere den geöffneten Brief in der Datenbank
             const openedLettersRef = ref(db, 'openedLetters');
             const openedSnapshot = await get(openedLettersRef);
             const openedLetters = openedSnapshot.val() || {};
@@ -145,17 +152,16 @@ async function confirmUser() {
         return;
     }
 
-    const uuid = generateUUID();
-    const userRef = ref(db, 'users/' + selectedUser);
-
     try {
+        const uuid = generateUUID();
+        const userRef = ref(db, 'users/' + selectedUser);
+
         const snapshot = await get(userRef);
         if (snapshot.exists() && snapshot.val().selected) {
             alert('Dieser Name wurde bereits ausgewählt');
             return;
         }
 
-        // Speichere Benutzer mit UUID
         await set(userRef, {
             uuid: uuid,
             selected: true,
@@ -165,7 +171,6 @@ async function confirmUser() {
         currentUser = selectedUser;
         userSelectionModal.style.display = 'none';
         
-        // Zeige bereits geöffnete Briefe an
         await loadOpenedLetters();
     } catch (error) {
         console.error("Fehler beim Bestätigen des Benutzers:", error);
@@ -180,7 +185,6 @@ async function loadOpenedLetters() {
         const snapshot = await get(openedLettersRef);
         const openedLetters = snapshot.val() || {};
 
-        // Markiere geöffnete Briefe
         Object.keys(openedLetters).forEach(index => {
             const letter = document.querySelector(`.letter[data-index="${index}"]`);
             if (letter) {
@@ -216,11 +220,15 @@ function attachLetterEvents() {
 
 // Initialisierung
 async function initialize() {
-    await initializeDatabase();
-    populateDropdown();
-    generateLetters();
-    attachLetterEvents();
-    loadOpenedLetters();
+    try {
+        await initializeDatabase();
+        populateDropdown();
+        generateLetters();
+        attachLetterEvents();
+        await loadOpenedLetters();
+    } catch (error) {
+        console.error("Fehler bei der Initialisierung:", error);
+    }
 }
 
 initialize();
