@@ -3,57 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Familien Wichteln</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="container">
-        <h1>Familien Wichteln</h1>
-        <button id="open-user-selection">Wähle deinen Namen</button>
-
-        <div id="user-selection" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Wähle einen Namen</h2>
-                <select id="user-dropdown"></select>
-                <button id="confirm-user">Bestätigen</button>
-            </div>
+    <div id="background" style="background-image: url('Hintergrund.png');">
+        <div id="user-selection">
+            <label for="userSelect">Wähle deinen Namen:</label>
+            <select id="userSelect">
+                <option value="">Bitte wählen</option>
+                <option value="Basti">Basti</option>
+                <option value="Julia">Julia</option>
+                <option value="Dirk">Dirk</option>
+                <option value="Steh-Vieh">Steh-Vieh</option>
+                <option value="Romy">Romy</option>
+                <option value="Christian">Christian</option>
+                <option value="Lina">Lina</option>
+                <option value="Moritz">Moritz</option>
+                <option value="Sissi">Sissi</option>
+                <option value="Bartosz">Bartosz</option>
+                <option value="David">David</option>
+                <option value="Monika">Monika</option>
+                <option value="Sascha">Sascha</option>
+                <option value="Violetta">Violetta</option>
+                <option value="Sammy">Sammy</option>
+                <option value="Sven">Sven</option>
+                <option value="Angi">Angi</option>
+                <option value="Andrea">Andrea</option>
+            </select>
+            <button id="confirmButton">Bestätigen</button>
         </div>
 
-        <div id="letters-container">
-            <!-- Hier werden die Briefe angezeigt -->
-            <div class="letter" data-index="0">Brief 1</div>
-            <div class="letter" data-index="1">Brief 2</div>
-            <div class="letter" data-index="2">Brief 3</div>
-            <div class="letter" data-index="3">Brief 4</div>
-            <div class="letter" data-index="4">Brief 5</div>
-            <div class="letter" data-index="5">Brief 6</div>
-            <div class="letter" data-index="6">Brief 7</div>
-            <div class="letter" data-index="7">Brief 8</div>
-            <div class="letter" data-index="8">Brief 9</div>
-            <div class="letter" data-index="9">Brief 10</div>
-            <div class="letter" data-index="10">Brief 11</div>
-            <div class="letter" data-index="11">Brief 12</div>
-            <div class="letter" data-index="12">Brief 13</div>
-            <div class="letter" data-index="13">Brief 14</div>
-            <div class="letter" data-index="14">Brief 15</div>
-            <div class="letter" data-index="15">Brief 16</div>
-            <div class="letter" data-index="16">Brief 17</div>
-            <div class="letter" data-index="17">Brief 18</div>
-        </div>
+        <div id="lettersContainer"></div>
 
-        <div id="name-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Dein Wichtelpartner ist:</h2>
-                <p id="partner-name"></p>
-                <button class="close">Schließen</button>
-            </div>
+        <div id="namePopup" style="display: none;">
+            <div id="nameDisplay"></div>
+            <button id="closePopup">Schließen</button>
         </div>
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
