@@ -20,7 +20,7 @@ body {
 .letter {
     width: 100px; /* Breite des Briefs, anpassbar */
     height: 150px; /* Höhe des Briefs, anpassbar */
-    background-image: url('Brief zu.jfif'); /* Bild für den Brief hier angeben */
+    background-image: url('Brief zu.png'); /* Bild für den Brief hier angeben */
     background-size: cover; /* Bild anpassen */
     background-position: center; /* Bild zentrieren */
     display: inline-block;
