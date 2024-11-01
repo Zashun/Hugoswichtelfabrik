@@ -22,14 +22,14 @@ body {
 .brief {
     background-image: url('Brief zu.png');
     background-size: cover;
-    width: 150%;
-    height: 100px; /* Höhe der Briefe */
+    width: 100%;
+    height: 150px; /* Höhe der Briefe */
     cursor: pointer;
     transition: transform 0.3s;
 }
 
 .brief:hover {
-    transform: scale(1.2); /* Vergrößerungseffekt beim Hover */
+    transform: scale(1.05); /* Vergrößerungseffekt beim Hover */
 }
 
 .brief.offen {
