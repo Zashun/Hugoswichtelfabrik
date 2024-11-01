@@ -51,6 +51,11 @@ window.onclick = (event) => {
 // Bestehende gezogene Namen im Set speichern
 const drawnNames = new Set();
 
+// Ergebnis speichern
+function saveDrawResult(name) {
+    set(ref(database, 'draws/' + deviceId), { name: name });
+}
+
 // Funktion für Ziehungen und Speicherung
 function drawNewName() {
     // Filter für verfügbare Namen
@@ -75,11 +80,6 @@ function drawNewName() {
     });
 
     updateRemainingCount(); // Anzahl der verbleibenden Namen aktualisieren
-}
-
-// Ergebnis speichern
-function saveDrawResult(name) {
-    set(ref(database, 'draws/' + deviceId), { name: name });
 }
 
 // Prüfen und Ziehen, wenn auf einen Brief geklickt wird
@@ -107,8 +107,21 @@ function updateRemainingCount() {
     document.getElementById("remainingCount").textContent = `Verbleibende Namen: ${remaining}`;
 }
 
-// Beim Laden der Seite den Zähler aktualisieren
+// Alle bereits gezogenen Namen beim Laden der Seite abrufen
+function initializeDrawnNames() {
+    const dbRef = ref(database, 'draws/');
+    get(dbRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            snapshot.forEach((childSnapshot) => {
+                const drawnName = childSnapshot.val().name;
+                drawnNames.add(drawnName); // Namen zum Set hinzufügen
+            });
+        }
+        updateRemainingCount(); // Zähler aktualisieren
+    }).catch((error) => console.error("Fehler beim Abrufen der gezogenen Namen: ", error));
+}
+
+// Beim Laden der Seite alle Namen abrufen
 window.onload = () => {
-    checkOrDraw();
-    updateRemainingCount();
+    initializeDrawnNames(); // Bereits gezogene Namen abrufen
 };
