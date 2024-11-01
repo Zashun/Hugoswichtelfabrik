@@ -1,48 +1,59 @@
 body {
+    background-image: url('Hintergrund.png');
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    text-align: center;
+    color: white;
 }
 
-#background {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    background-size: cover;
-}
-
-#lettersContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+.container {
     margin-top: 20px;
 }
 
 .letter {
-    width: 100px;
-    height: 150px;
+    width: 200px;
+    height: 300px;
+    display: inline-block;
+    margin: 20px;
     background-size: cover;
-    margin: 10px;
-    cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.3s;
 }
 
 .letter:hover {
-    transform: scale(1.1); /* Vergrößerungseffekt */
+    transform: scale(1.1);
 }
 
-#namePopup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; 
     padding: 20px;
-    border: 1px solid black;
-    display: none;
-    z-index: 10;
+    border: 1px solid #888;
+    width: 80%; 
 }
 
-#closePopup {
-    margin-top: 10px;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
