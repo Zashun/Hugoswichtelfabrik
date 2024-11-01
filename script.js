@@ -1,5 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+// Firebase Konfiguration
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo",
@@ -14,65 +15,51 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const uuid = generateUUID();
+const briefContainer = document.querySelector('.brief-container');
+const namen = ["Basti", "Julia", "Dirk", "Steh-Vieh", "Romy", "Christian", "Lina", "Moritz", "Sissi", "Bartosz", "David", "Monika", "Sascha", "Violetta", "Sammy", "Sven", "Angi", "Andrea"];
+const gezogen = [];
 
-const letters = document.getElementById('letters');
-const confirmButton = document.getElementById('confirmButton');
-const userSelect = document.getElementById('userSelect');
-const nameModal = document.getElementById('nameModal');
-const nameDisplay = document.getElementById('nameDisplay');
-const closeModal = document.getElementById('closeModal');
-
-const users = [
-    "Basti", "Julia", "Dirk", "Steh-Vieh", "Romy",
-    "Christian", "Lina", "Moritz", "Sissi", "Bartosz",
-    "David", "Monika", "Sascha", "Violetta", "Sammy",
-    "Sven", "Angi", "Andrea"
-];
-
-users.forEach((user, index) => {
-    const letter = document.createElement('div');
-    letter.className = 'letter';
-    letter.id = `letter_${index}`;
-    letter.style.backgroundImage = "url('Brief zu.png')";
-    letter.addEventListener('click', () => openLetter(user, index));
-    letters.appendChild(letter);
-});
-
-confirmButton.addEventListener('click', () => {
-    const selectedUser = userSelect.value;
-    if (selectedUser) {
-        const uuid = generateUUID();
-        saveUserToDB(selectedUser, uuid);
-    }
-});
-
-function openLetter(user, index) {
-    const letter = document.getElementById(`letter_${index}`);
-    letter.style.backgroundImage = "url('Brief auf.png')";
-    nameDisplay.innerText = user;
-    nameModal.style.display = "block";
-}
-
-closeModal.onclick = function() {
-    nameModal.style.display = "none";
-};
-
-function saveUserToDB(user, uuid) {
-    set(ref(db, 'users/' + uuid), {
-        name: user,
-        opened: true
-    });
-}
-
+// Hilfsfunktion, um eine UUID zu generieren
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
 
-// Firebase-Datenbank-Listener
-onValue(ref(db, 'users'), (snapshot) => {
-    const data = snapshot.val();
-    console.log(data); // Hier kannst du das Datenhandling implementieren
-});
+// Briefe initialisieren
+function loadBriefe() {
+    for (let i = 0; i < namen.length; i++) {
+        const brief = document.createElement('div');
+        brief.classList.add('brief');
+        brief.dataset.index = i;
+        brief.addEventListener('click', () => zieheBrief(i));
+        briefContainer.appendChild(brief);
+    }
+}
+
+// Prüfen und Ziehen des Briefs
+async function zieheBrief(index) {
+    const dbRef = ref(db);
+    const snapshot = await get(child(dbRef, `gezogen/${index}`));
+
+    if (snapshot.exists()) {
+        alert("Dieser Brief wurde schon gezogen.");
+        return;
+    }
+
+    const gewaehlterName = namen[index];
+    gespeichert = true;
+    gezogen.push(index);
+
+    // Brief anzeigen und in der Datenbank speichern
+    document.querySelector(`.brief[data-index="${index}"]`).classList.add('offen');
+    await set(ref(db, `gezogen/${index}`), { uuid, name: gewaehlterName });
+    
+    alert(`Dein Wichtelpartner ist: ${gewaehlterName}`);
+}
+
+// Briefe laden
+loadBriefe();
