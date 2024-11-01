@@ -9,9 +9,16 @@ const participants = [
 // Array, um die Briefe und ihren Status zu speichern
 const letters = Array.from(document.querySelectorAll('.letter'));
 const assignedNames = {};
-const resultDiv = document.createElement('div');
-const resultImage = document.createElement('img');
-const resultText = document.createElement('p');
+
+// Neues Element für das Modal
+const resultDiv = document.getElementById('result');
+const recipientName = document.getElementById('recipientName');
+const closeBtn = document.getElementById('closeBtn');
+
+// Event-Listener für das Schließen des Modals
+closeBtn.addEventListener('click', () => {
+    resultDiv.style.display = 'none'; // Schließt das Modal
+});
 
 // Funktion, um einen zufälligen Namen zu wählen
 function getRandomName(exclude) {
@@ -21,26 +28,8 @@ function getRandomName(exclude) {
     return availableNames[randomIndex];
 }
 
-// Ergebnis-Bereich erstellen
-resultDiv.style.display = 'none'; // Anfangs versteckt
-resultDiv.style.position = 'fixed';
-resultDiv.style.top = '50%';
-resultDiv.style.left = '50%';
-resultDiv.style.transform = 'translate(-50%, -50%)';
-resultDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'; // Halbtransparentes Hintergrund
-resultDiv.style.padding = '20px';
-resultDiv.style.borderRadius = '10px';
-resultDiv.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-document.body.appendChild(resultDiv);
-
-resultImage.style.maxWidth = '200px'; // Maximale Bildbreite
-resultDiv.appendChild(resultImage);
-resultText.style.fontSize = '1.5em';
-resultDiv.appendChild(resultText);
-
 // Event-Listener für die Briefe
 letters.forEach(letter => {
-    letter.style.backgroundImage = "url('Brief zu.jfif')"; // Standardmäßig geschlossene Briefe
     letter.addEventListener('click', function() {
         const letterIndex = letters.indexOf(this);
         
@@ -54,14 +43,11 @@ letters.forEach(letter => {
         const recipient = getRandomName(null);
         if (recipient) {
             assignedNames[letterIndex] = recipient;
-            this.style.backgroundImage = "url('Brief offen.jfif')"; // Brief wird geöffnet
-            resultImage.src = 'path/to/image/' + recipient + '.jpg'; // Bild für den Wichtelpartner (ersetze den Pfad)
-            resultText.textContent = `Du hast ${recipient} gezogen!`; // Nachricht an den Nutzer
-            resultDiv.style.display = 'block'; // Ergebnisbereich anzeigen
-
-            // Briefe nicht mehr klickbar machen
+            this.style.backgroundImage = "url('Brief offen.jfif')"; // Brief wird offen
+            recipientName.textContent = recipient; // Name auf dem Modal anzeigen
+            resultDiv.style.display = 'block'; // Modal anzeigen
             letters.forEach(l => {
-                l.style.pointerEvents = 'none'; // Deaktiviere das Klicken
+                l.style.pointerEvents = 'none'; // Briefe nicht mehr klickbar machen
             });
         } else {
             alert("Es gibt keine verfügbaren Teilnehmer mehr.");
