@@ -89,7 +89,7 @@ function drawNewName() {
 }
 
 // Prüfen und Ziehen, wenn auf einen Brief geklickt wird
-function checkOrDraw() {
+function checkOrDraw(letter) {
     const dbRef = ref(database);
     get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
         if (snapshot.exists()) {
@@ -107,7 +107,7 @@ function checkOrDraw() {
 
 // Klick-Event für Briefe hinzufügen
 letters.forEach(letter => {
-    letter.addEventListener('click', checkOrDraw);
+    letter.addEventListener('click', () => checkOrDraw(letter));
 });
 
 // Funktion zum Aktualisieren der verbleibenden Namen
