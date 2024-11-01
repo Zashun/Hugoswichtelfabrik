@@ -4,22 +4,16 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    min-height: 100vh; /* Minimalhöhe des Viewports */
+    display: flex;
+    flex-wrap: wrap; /* Damit die Briefe in mehreren Zeilen angeordnet werden */
+    align-items: center;
+    justify-content: center; /* Zentriert den Inhalt horizontal */
+    min-height: 100vh;
+    position: relative; /* Um das Hintergrundbild richtig zu positionieren */
+    overflow: hidden; /* Um sicherzustellen, dass nichts über den Rand hinausgeht */
     background-image: url('Hintergrund.jpg'); /* Hintergrundbild hier angeben */
     background-size: cover; /* Hintergrundbild anpassen */
     background-position: center; /* Hintergrundbild zentrieren */
-    overflow: hidden; /* Verhindert Scrollen des Body */
-}
-
-/* Stil für den Container */
-#tree {
-    display: flex; /* Aktiviert Flexbox */
-    flex-wrap: wrap; /* Ermöglicht Zeilenumbruch */
-    justify-content: center; /* Zentriert den Inhalt horizontal */
-    overflow-y: auto; /* Ermöglicht vertikales Scrollen */
-    max-height: 80vh; /* Maximalhöhe für den Container */
-    padding: 10px; /* Innenabstand */
-    box-sizing: border-box; /* Bezieht den Innenabstand in die Gesamtbreite ein */
 }
 
 /* Stil für die Briefe */
@@ -29,8 +23,8 @@ body {
     background-image: url('Brief zu.png'); /* Bild für den Brief hier angeben */
     background-size: cover; /* Bild anpassen */
     background-position: center; /* Bild zentrieren */
-    display: inline-block; /* Inline-Block für Umbrüche */
-    margin: 10px; /* Abstand um die Briefe */
+    display: inline-block;
+    margin: 20px; /* Abstand um die Briefe */
     cursor: pointer;
     position: relative; /* Damit wir bei Bedarf weitere Styles hinzufügen können */
     text-align: center; /* Text zentrieren */
@@ -63,13 +57,27 @@ body {
 
 /* Inhalt des Modals */
 .modal-content {
-    background-color: red; /* Hintergrundfarbe des Inhalts */
-    margin: 15% auto; /* Abstand oben und unten */
-    padding: 20px; /* Abstand innerhalb des Inhalts */
-    border: 1px solid #888; /* Rahmen */
+    background-color: red; /* Rote Hintergrundfarbe */
+    margin: 15% auto; /* Zentrale Positionierung */
+    padding: 20px;
+    border: 1px solid #888;
     width: 80%; /* Breite des Modals */
-    max-width: 500px; /* Maximalbreite des Modals */
-    border-radius: 10px; /* Abgerundete Ecken */
+    max-width: 500px; /* Maximale Breite */
+}
+
+/* Schließen-Button */
+.close {
+    color: white; /* Farbe des Schließen-Buttons */
+    float: right; /* Positionierung des Buttons */
+    font-size: 28px; /* Größe des Buttons */
+    font-weight: bold; /* Fettdruck */
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb; /* Farbe beim Hover */
+    text-decoration: none; /* Keine Unterstreichung */
+    cursor: pointer; /* Zeiger-Cursor */
 }
 
 /* Mobile Optimierung */
