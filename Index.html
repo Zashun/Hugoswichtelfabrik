@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wichteln 2023</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Wichteln 2023</h1>
+        
+        <div id="user-selection" class="modal">
+            <div class="modal-content">
+                <h2>Wer bist du?</h2>
+                <select id="user-dropdown">
+                    <option value="">Bitte wählen</option>
+                </select>
+                <button id="confirm-user">Bestätigen</button>
+            </div>
+        </div>
+
+        <div id="letters-container">
+            <!-- 18 Briefe werden hier dynamisch eingefügt -->
+        </div>
+    </div>
+
+    <div id="name-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Dein Wichtel-Partner</h2>
+            <p id="partner-name"></p>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
