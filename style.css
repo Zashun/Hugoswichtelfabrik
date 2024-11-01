@@ -16,8 +16,8 @@ body {
 
 .brief-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 Spalten */
-    gap: 50px; /* Abstand zwischen den Briefen */
+    grid-template-columns: repeat(2, 1fr); /* 2 Spalten */
+    gap: 20px; /* Abstand zwischen den Briefen */
     max-width: 600px; /* Maximale Breite der Briefe */
     margin: auto; /* Zentriert den Container */
 }
