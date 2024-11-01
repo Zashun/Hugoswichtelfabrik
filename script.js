@@ -26,6 +26,24 @@ const names = [
     "Sven", "Angi", "Andrea"
 ];
 
+// Funktion zur Generierung einer UUID
+function generateUUID() {
+    // Einfacher Platzhalter für die UUID-Generierung
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0,
+              v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+// Funktion zur Generierung der Buchstaben
+function generateLetters() {
+    // Hier kannst du die Logik zur Generierung der Buchstaben hinzufügen,
+    // oder einfach einen Platzhalter setzen, wenn es nur um das Debugging geht
+    console.log("Buchstaben wurden generiert (Platzhalter).");
+}
+
+
 // DOM-Elemente
 const userDropdown = document.getElementById('user-dropdown');
 const confirmUserBtn = document.getElementById('confirm-user');
