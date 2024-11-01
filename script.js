@@ -53,7 +53,13 @@ const drawnNames = new Set();
 
 // Ergebnis speichern
 function saveDrawResult(name) {
-    set(ref(database, 'draws/' + deviceId), { name: name });
+    set(ref(database, 'draws/' + deviceId), { name: name })
+        .then(() => {
+            console.log(`Ergebnis gespeichert: ${name}`);
+        })
+        .catch((error) => {
+            console.error("Fehler beim Speichern des Ergebnisses: ", error);
+        });
 }
 
 // Funktion für Ziehungen und Speicherung
@@ -90,10 +96,13 @@ function checkOrDraw() {
             openModal(snapshot.val().name); // Bereits gezogener Name
             drawnNames.add(snapshot.val().name); // Namen zum Set hinzufügen
             updateRemainingCount(); // Zähler aktualisieren
+            console.log(`Bereits gezogener Name: ${snapshot.val().name}`);
         } else {
             drawNewName(); // Neuer Name ziehen
         }
-    }).catch((error) => console.error("Fehler: ", error));
+    }).catch((error) => {
+        console.error("Fehler: ", error);
+    });
 }
 
 // Klick-Event für Briefe hinzufügen
@@ -105,6 +114,7 @@ letters.forEach(letter => {
 function updateRemainingCount() {
     const remaining = participants.length - drawnNames.size;
     document.getElementById("remainingCount").textContent = `Verbleibende Namen: ${remaining}`;
+    console.log(`Verbleibende Namen: ${remaining}`);
 }
 
 // Alle bereits gezogenen Namen beim Laden der Seite abrufen
@@ -118,7 +128,9 @@ function initializeDrawnNames() {
             });
         }
         updateRemainingCount(); // Zähler aktualisieren
-    }).catch((error) => console.error("Fehler beim Abrufen der gezogenen Namen: ", error));
+    }).catch((error) => {
+        console.error("Fehler beim Abrufen der gezogenen Namen: ", error);
+    });
 }
 
 // Beim Laden der Seite alle Namen abrufen
