@@ -10,7 +10,7 @@ body {
     justify-content: center; /* Zentriert den Inhalt horizontal */
     min-height: 100vh;
     position: relative; /* Um das Hintergrundbild richtig zu positionieren */
-    overflow: hidden; /* Um sicherzustellen, dass nichts über den Rand hinausgeht */
+    overflow: auto; /* Um sicherzustellen, dass nichts über den Rand hinausgeht */
     background-image: url('Hintergrund.jpg'); /* Hintergrundbild hier angeben */
     background-size: cover; /* Hintergrundbild anpassen */
     background-position: center; /* Hintergrundbild zentrieren */
