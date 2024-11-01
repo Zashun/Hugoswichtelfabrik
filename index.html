@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Familien Wichteln</title>
+    <!-- Firebase SDKs einfügen -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script> <!-- Falls Authentifizierung benötigt wird -->
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <div id="background" style="background-image: url('Hintergrund.jpg');">
+    <div id="background" style="background-image: url('Hintergrund.png');">
         <div id="user-selection">
             <label for="userSelect">Wähle deinen Namen:</label>
             <select id="userSelect">
@@ -41,6 +46,5 @@
             <button id="closePopup">Schließen</button>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
