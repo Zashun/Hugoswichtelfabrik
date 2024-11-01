@@ -48,12 +48,13 @@ window.onclick = (event) => {
     if (event.target === modal) modal.style.display = "none";
 };
 
-// Set zur Speicherung gezogener Namen
-const drawnNames = new Set(); 
+// Bestehende gezogene Namen im Set speichern
+const drawnNames = new Set();
 
 // Funktion für Ziehungen und Speicherung
 function drawNewName() {
-    let availableParticipants = participants.filter(name => !drawnNames.has(name)); // Filter für verfügbare Namen
+    // Filter für verfügbare Namen
+    const availableParticipants = participants.filter(name => !drawnNames.has(name));
 
     if (availableParticipants.length === 0) {
         alert("Alle Namen wurden bereits gezogen!");
@@ -87,14 +88,18 @@ function checkOrDraw() {
     get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
         if (snapshot.exists()) {
             openModal(snapshot.val().name); // Bereits gezogener Name
-            drawnNames.add(snapshot.val().name); // Füge den bereits gezogenen Namen zum Set hinzu
-            updateRemainingCount(); // Aktualisiere die verbleibenden Namen
-            letters.forEach(letter => letter.style.pointerEvents = 'none'); // Briefe deaktivieren
+            drawnNames.add(snapshot.val().name); // Namen zum Set hinzufügen
+            updateRemainingCount(); // Zähler aktualisieren
         } else {
-            drawNewName(); // Neuer Name
+            drawNewName(); // Neuer Name ziehen
         }
     }).catch((error) => console.error("Fehler: ", error));
 }
+
+// Klick-Event für Briefe hinzufügen
+letters.forEach(letter => {
+    letter.addEventListener('click', checkOrDraw);
+});
 
 // Funktion zum Aktualisieren der verbleibenden Namen
 function updateRemainingCount() {
@@ -102,13 +107,8 @@ function updateRemainingCount() {
     document.getElementById("remainingCount").textContent = `Verbleibende Namen: ${remaining}`;
 }
 
-// Beim Laden der Seite den Zähler aktualisieren und prüfen
+// Beim Laden der Seite den Zähler aktualisieren
 window.onload = () => {
-    updateRemainingCount(); // Zähler beim Laden aktualisieren
-    checkOrDraw(); // Ziehstatus überprüfen
+    checkOrDraw();
+    updateRemainingCount();
 };
-
-// Klick-Event für Briefe hinzufügen
-letters.forEach(letter => {
-    letter.addEventListener('click', checkOrDraw);
-});
