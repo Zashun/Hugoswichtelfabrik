@@ -39,56 +39,53 @@ function getRandomName(exclude) {
 }
 
 // Funktion, um den Ziehungsstatus vom Server abzurufen
-function getDrawingStatus() {
-    const dbRef = ref(database, 'drawings/');
-    get(child(dbRef, 'participants')).then((snapshot) => {
+function getDrawingStatus(participantId) {
+    const dbRef = ref(database, 'draws/' + participantId);
+    get(dbRef).then((snapshot) => {
         if (snapshot.exists()) {
-            // Ziehungen vom Server abrufen
-            const data = snapshot.val();
-            for (let i = 0; i < letters.length; i++) {
-                if (data[i]) {
-                    assignedNames[i] = data[i]; // Name in assignedNames speichern
-                    letters[i].textContent = data[i]; // Name auf dem Brief anzeigen
-                    letters[i].style.pointerEvents = 'none'; // Brief nicht mehr klickbar
-                }
-            }
+            // Name anzeigen, der bereits gezogen wurde
+            openModal(snapshot.val().name);
+            letters.forEach(l => {
+                l.style.pointerEvents = 'none'; // Briefe nicht mehr klickbar machen
+            });
+        } else {
+            // Ziehung noch nicht erfolgt
+            drawNewName(participantId);
         }
     }).catch((error) => {
         console.error("Fehler beim Abrufen der Ziehungen: ", error);
     });
 }
 
+// Funktion, um einen neuen Namen zu ziehen und das Ergebnis zu speichern
+function drawNewName(participantId) {
+    const recipient = getRandomName(null);
+    if (recipient) {
+        assignedNames[participantId] = recipient;
+        saveDrawing(participantId, recipient); // Ergebnis speichern
+        openModal(recipient); // Modal mit Namen öffnen
+    } else {
+        alert("Es gibt keine verfügbaren Teilnehmer mehr.");
+    }
+
+    // Briefe nicht mehr klickbar machen
+    letters.forEach(l => {
+        l.style.pointerEvents = 'none';
+    });
+}
+
 // Funktion, um den Namen des gezogenen Teilnehmers zu speichern
-function saveDrawing(letterIndex, recipient) {
-    const updates = {};
-    updates[`drawings/participants/${letterIndex}`] = recipient;
-    update(ref(database), updates);
+function saveDrawing(participantId, name) {
+    set(ref(database, 'draws/' + participantId), {
+        name: name
+    });
 }
 
 // Event-Listener für die Briefe
 letters.forEach((letter, index) => {
     letter.addEventListener('click', function() {
-        // Überprüfen, ob der Brief schon geöffnet wurde
-        if (assignedNames[index]) {
-            alert("Dieser Brief wurde bereits geöffnet!");
-            return;
-        }
-
-        // Zuweisung eines Namens
-        const recipient = getRandomName(null);
-        if (recipient) {
-            assignedNames[index] = recipient;
-            this.textContent = recipient; // Name auf dem Brief anzeigen
-            saveDrawing(index, recipient); // Ziehung speichern
-            openModal(recipient); // Modal mit Namen öffnen
-        } else {
-            alert("Es gibt keine verfügbaren Teilnehmer mehr.");
-        }
-        
-        // Briefe nicht mehr klickbar machen
-        letters.forEach(l => {
-            l.style.pointerEvents = 'none';
-        });
+        const participantId = participants[index]; // ID basierend auf dem Namen
+        getDrawingStatus(participantId); // Überprüfen und ggf. ziehen
     });
 });
 
@@ -104,6 +101,3 @@ function openModal(recipient) {
 document.getElementById('result').onclick = function() {
     this.style.display = 'none'; // Modal verstecken
 };
-
-// Ziehungsstatus beim Laden der Seite abrufen
-window.onload = getDrawingStatus;
