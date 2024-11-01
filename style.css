@@ -16,15 +16,15 @@ body {
 
 .brief-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px; /* Abstand zwischen den Briefen */
+    grid-template-columns: repeat(3, 1fr); /* 3 Spalten */
+    gap: 50px; /* Abstand zwischen den Briefen */
     max-width: 600px; /* Maximale Breite der Briefe */
     margin: auto; /* Zentriert den Container */
 }
 
 .brief {
-    width: 120px; /* Breite der Briefe */
-    height: 180px; /* Höhe der Briefe */
+    width: 150px; /* Breite der Briefe */
+    height: 100px; /* Höhe der Briefe */
     background-image: url('Brief zu.png'); /* Ungeöffneter Brief */
     background-size: cover; /* Größe anpassen */
     cursor: pointer;
@@ -35,4 +35,11 @@ body {
 .brief.offen {
     background-image: url('Brief auf.png'); /* Geöffneter Brief */
     transform: scale(1.1); /* Vergrößerungseffekt beim Öffnen */
+}
+
+@media (max-width: 600px) {
+    .brief {
+        width: 100px; /* Breite der Briefe auf kleineren Bildschirmen */
+        height: 80px; /* Höhe der Briefe auf kleineren Bildschirmen */
+    }
 }
