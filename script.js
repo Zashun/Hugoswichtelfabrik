@@ -4,7 +4,7 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
 
 // Firebase-Konfiguration
 const firebaseConfig = {
-    apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo", // Ersetze dies mit deinem API-Schlüssel
+    apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo",
     authDomain: "wichteln-94d95.firebaseapp.com",
     databaseURL: "https://wichteln-94d95-default-rtdb.firebaseio.com",
     projectId: "wichteln-94d95",
@@ -48,18 +48,6 @@ window.onclick = (event) => {
     if (event.target === modal) modal.style.display = "none";
 };
 
-// Prüfen und Ziehen
-function checkOrDraw() {
-    const dbRef = ref(database);
-    get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
-        if (snapshot.exists()) {
-            openModal(snapshot.val().name); // Bereits gezogener Name
-        } else {
-            drawNewName(); // Neuer Name
-        }
-    }).catch((error) => console.error("Fehler: ", error));
-}
-
 // Funktion für Ziehungen und Speicherung
 function drawNewName() {
     const recipient = participants[Math.floor(Math.random() * participants.length)];
@@ -73,5 +61,19 @@ function saveDrawResult(name) {
     set(ref(database, 'draws/' + deviceId), { name: name });
 }
 
-// Beim Laden der Seite starten
-window.onload = checkOrDraw;
+// Prüfen und Ziehen, wenn auf einen Brief geklickt wird
+function checkOrDraw() {
+    const dbRef = ref(database);
+    get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
+        if (snapshot.exists()) {
+            openModal(snapshot.val().name); // Bereits gezogener Name
+        } else {
+            drawNewName(); // Neuer Name
+        }
+    }).catch((error) => console.error("Fehler: ", error));
+}
+
+// Klick-Event für Briefe hinzufügen
+letters.forEach(letter => {
+    letter.addEventListener('click', checkOrDraw);
+});
