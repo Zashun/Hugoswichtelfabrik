@@ -40,6 +40,7 @@ resultDiv.appendChild(resultText);
 
 // Event-Listener für die Briefe
 letters.forEach(letter => {
+    letter.style.backgroundImage = "url('Brief zu.jfif')"; // Standardmäßig geschlossene Briefe
     letter.addEventListener('click', function() {
         const letterIndex = letters.indexOf(this);
         
@@ -53,6 +54,7 @@ letters.forEach(letter => {
         const recipient = getRandomName(null);
         if (recipient) {
             assignedNames[letterIndex] = recipient;
+            this.style.backgroundImage = "url('Brief offen.jfif')"; // Brief wird geöffnet
             resultImage.src = 'path/to/image/' + recipient + '.jpg'; // Bild für den Wichtelpartner (ersetze den Pfad)
             resultText.textContent = `Du hast ${recipient} gezogen!`; // Nachricht an den Nutzer
             resultDiv.style.display = 'block'; // Ergebnisbereich anzeigen
