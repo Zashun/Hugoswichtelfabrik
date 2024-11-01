@@ -3,7 +3,14 @@ import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/fire
 
 // Firebase Konfiguration bleibt gleich...
 const firebaseConfig = {
-    // Ihre Konfiguration...
+    apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo",
+    authDomain: "wichteln-94d95.firebaseapp.com",
+    databaseURL: "https://wichteln-94d95-default-rtdb.firebaseio.com",
+    projectId: "wichteln-94d95",
+    storageBucket: "wichteln-94d95.appspot.com",
+    messagingSenderId: "1075406306053",
+    appId: "1:1075406306053:web:3dca41104574bd7be1156c",
+    measurementId: "G-K40DJ2BM6H"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -27,6 +34,16 @@ const lettersContainer = document.getElementById('letters-container');
 const nameModal = document.getElementById('name-modal');
 const partnerNameElement = document.getElementById('partner-name');
 const closeNameModalBtn = document.querySelector('#name-modal .close');
+
+// Benutzer zur Dropdown-Liste hinzufügen
+async function populateDropdown() {
+    names.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        userDropdown.appendChild(option);
+    });
+}
 
 // Benutzerauswahl prüfen
 async function checkUserSelection(userName) {
