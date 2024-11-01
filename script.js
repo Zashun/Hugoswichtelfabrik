@@ -77,3 +77,45 @@ function checkOrDraw() {
 letters.forEach(letter => {
     letter.addEventListener('click', checkOrDraw);
 });
+
+// Bestehenden Code oben unverändert lassen
+
+const drawnNames = new Set(); // Set zur Speicherung gezogener Namen
+
+// Funktion für Ziehungen und Speicherung
+function drawNewName() {
+    let availableParticipants = participants.filter(name => !drawnNames.has(name)); // Filter für verfügbare Namen
+
+    if (availableParticipants.length === 0) {
+        alert("Alle Namen wurden bereits gezogen!");
+        return;
+    }
+
+    const recipient = availableParticipants[Math.floor(Math.random() * availableParticipants.length)];
+    drawnNames.add(recipient); // Hinzufügen des gezogenen Namens zum Set
+    saveDrawResult(recipient);
+    openModal(recipient);
+
+    // Briefe ersetzen und Anzahl der verbleibenden Namen aktualisieren
+    letters.forEach(letter => {
+        if (letter.getAttribute('data-name') === recipient) {
+            letter.style.backgroundImage = "url('Brief offen.png')"; // Brief ersetzen
+        }
+        letter.style.pointerEvents = 'none'; // Deaktiviert alle Briefe
+    });
+
+    updateRemainingCount(); // Anzahl der verbleibenden Namen aktualisieren
+}
+
+// Funktion zum Aktualisieren der verbleibenden Namen
+function updateRemainingCount() {
+    const remaining = participants.length - drawnNames.size;
+    document.getElementById("remainingCount").textContent = `Verbleibende Namen: ${remaining}`;
+}
+
+// Beim Laden der Seite den Zähler aktualisieren
+window.onload = () => {
+    checkOrDraw();
+    updateRemainingCount();
+};
+
