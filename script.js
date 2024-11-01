@@ -1,28 +1,19 @@
-// Firebase Initialisierung (deine Firebase-Konfiguration hier einfügen)
+// Firebase-Konfiguration
 const firebaseConfig = {
-    apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo",
-    authDomain: "wichteln-94d95.firebaseapp.com",
-    databaseURL: "https://wichteln-94d95-default-rtdb.firebaseio.com",
-    projectId: "wichteln-94d95",
-    storageBucket: "wichteln-94d95.firebasestorage.app",
-    messagingSenderId: "1075406306053",
-    appId: "1:1075406306053:web:3dca41104574bd7be1156c",
-    measurementId: "G-K40DJ2BM6H"
+    apiKey: "DEIN_API_KEY",
+    authDomain: "DEIN_PROJEKT_ID.firebaseapp.com",
+    databaseURL: "https://DEIN_PROJEKT_ID.firebaseio.com",
+    projectId: "DEIN_PROJEKT_ID",
+    storageBucket: "DEIN_PROJEKT_ID.appspot.com",
+    messagingSenderId: "DEINE_SENDER_ID",
+    appId: "DEINE_APP_ID"
 };
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+// Firebase initialisieren
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-const lettersContainer = document.getElementById('lettersContainer');
-const namePopup = document.getElementById('namePopup');
-const nameDisplay = document.getElementById('nameDisplay');
-const closePopup = document.getElementById('closePopup');
-const confirmButton = document.getElementById('confirmButton');
-const userSelect = document.getElementById('userSelect');
-
-let userUUID = null;
-
-// Funktion zur Generierung einer UUID
+// UUID erstellen
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = Math.random() * 16 | 0,
@@ -31,58 +22,25 @@ function generateUUID() {
     });
 }
 
-// Briefe laden und anzeigen
-function loadLetters() {
-    database.ref('letters').once('value').then(snapshot => {
-        const letters = snapshot.val();
-        for (let key in letters) {
-            const letterDiv = document.createElement('div');
-            letterDiv.classList.add('letter');
-            letterDiv.style.backgroundImage = "url('Brief zu.png')";
-            letterDiv.dataset.key = key; // Speichern des Schlüssels für später
-            letterDiv.addEventListener('click', () => openLetter(key, letters[key].name));
-            lettersContainer.appendChild(letterDiv);
-        }
-    });
-}
-
-// Brief öffnen
-function openLetter(letterKey, chosenName) {
-    // Popup anzeigen
-    nameDisplay.textContent = chosenName;
-    namePopup.style.display = "block";
-
-    // Update in der Datenbank
-    database.ref('letters/' + letterKey + '/openedBy').push(userUUID);
-
-    // Briefe im Container aktualisieren
-    const letterDivs = document.querySelectorAll('.letter');
-    letterDivs.forEach(div => {
-        if (div.dataset.key === letterKey) {
-            div.style.backgroundImage = "url('Brief auf.png')"; // Geöffnetes Bild anzeigen
-        }
-    });
-}
-
-// Ereignisse
-confirmButton.addEventListener('click', () => {
-    if (userSelect.value) {
-        if (!userUUID) {
-            userUUID = generateUUID(); // UUID generieren, wenn noch nicht vorhanden
-            // UUID in der Datenbank speichern
-            database.ref('users/' + userUUID).set({
-                name: userSelect.value
-            });
-        }
-        loadLetters(); // Briefe laden, wenn ein Benutzer ausgewählt wurde
+// Bestätigungsbutton-Listener
+document.getElementById('confirmButton').addEventListener('click', function() {
+    const selectedUser = document.getElementById('userSelect').value;
+    
+    if (selectedUser) {
+        const userUUID = generateUUID();
+        const userRef = database.ref(`users/${selectedUser}`);
+        
+        // UUID und ausgewählte Flag setzen
+        userRef.update({
+            uuid: userUUID,
+            selected: true
+        }).then(() => {
+            console.log(`UUID für ${selectedUser} in der Datenbank gespeichert: ${userUUID}`);
+            // Hier kannst du das Popup oder andere Aktionen hinzufügen
+        }).catch(error => {
+            console.error("Fehler beim Speichern in der Datenbank:", error);
+        });
     } else {
-        alert('Bitte wähle einen Namen.');
+        alert("Bitte wähle einen Namen aus.");
     }
 });
-
-closePopup.addEventListener('click', () => {
-    namePopup.style.display = "none"; // Popup schließen
-});
-
-// Starten der Anwendung
-loadLetters();
