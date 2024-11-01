@@ -1,0 +1,87 @@
+/* Gesamtseiten-Styling */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Damit die Briefe in mehreren Zeilen angeordnet werden */
+    align-items: center;
+    justify-content: center; /* Zentriert den Inhalt horizontal */
+    min-height: 100vh;
+    position: relative; /* Um das Hintergrundbild richtig zu positionieren */
+    overflow: hidden; /* Um sicherzustellen, dass nichts über den Rand hinausgeht */
+    background-image: url('Hintergrund.jpg'); /* Hintergrundbild hier angeben */
+    background-size: cover; /* Hintergrundbild anpassen */
+    background-position: center; /* Hintergrundbild zentrieren */
+}
+
+/* Stil für die Briefe */
+.letter {
+    width: 150px; /* Breite des Briefs, anpassbar */
+    height: 100px; /* Höhe des Briefs, anpassbar */
+    background-image: url('Brief zu.png'); /* Bild für den Brief hier angeben */
+    background-size: cover; /* Bild anpassen */
+    background-position: center; /* Bild zentrieren */
+    display: inline-block;
+    margin: 20px; /* Abstand um die Briefe */
+    cursor: pointer;
+    position: relative; /* Damit wir bei Bedarf weitere Styles hinzufügen können */
+    text-align: center; /* Text zentrieren */
+    color: #000; /* Textfarbe */
+    line-height: 150px; /* Vertikale Zentrierung des Textes */
+    font-weight: bold; /* Fettdruck für den Text */
+    border-radius: 10px; /* Abgerundete Ecken (optional) */
+    opacity: 0.8; /* Halbdurchsichtig (optional) */
+    transition: transform 0.3s; /* Sanfte Animation beim Hover */
+}
+
+.letter:hover {
+    transform: scale(1.2); /* Vergrößern beim Hover */
+}
+
+/* Modal-Stil */
+.modal {
+    display: none; /* Versteckt das Modal standardmäßig */
+    position: fixed; /* Positioniert das Modal relativ zum Viewport */
+    z-index: 1000; /* Z-Index für das Modal */
+    left: 0;
+    top: 0;
+    width: 100%; /* Breite des Modals */
+    height: 100%; /* Höhe des Modals */
+    overflow: auto; /* Aktiviert Scrollen bei Bedarf */
+    background-color: rgba(0, 0, 0, 0.8); /* Halbtransparentes Schwarz */
+    color: white; /* Textfarbe */
+    text-align: center; /* Text zentrieren */
+}
+
+/* Inhalt des Modals */
+.modal-content {
+    background-color: red; /* Rote Hintergrundfarbe */
+    margin: 15% auto; /* Zentrale Positionierung */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Breite des Modals */
+    max-width: 500px; /* Maximale Breite */
+}
+
+/* Schließen-Button */
+.close {
+    color: white; /* Farbe des Schließen-Buttons */
+    float: right; /* Positionierung des Buttons */
+    font-size: 28px; /* Größe des Buttons */
+    font-weight: bold; /* Fettdruck */
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb; /* Farbe beim Hover */
+    text-decoration: none; /* Keine Unterstreichung */
+    cursor: pointer; /* Zeiger-Cursor */
+}
+
+/* Mobile Optimierung */
+@media (max-width: 600px) {
+    h1 { font-size: 2em; }
+    .letter { width: 80px; height: 120px; font-size: 1em; }
+}
