@@ -24,8 +24,8 @@ body {
 
 /* Stil für die Briefe */
 .letter {
-    width: 100px; /* Breite des Briefs, anpassbar */
-    height: 150px; /* Höhe des Briefs, anpassbar */
+    width: 150px; /* Breite des Briefs, anpassbar */
+    height: 100px; /* Höhe des Briefs, anpassbar */
     background-image: url('Brief zu.png'); /* Bild für den Brief hier angeben */
     background-size: cover; /* Bild anpassen */
     background-position: center; /* Bild zentrieren */
