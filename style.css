@@ -29,7 +29,7 @@ body {
     position: relative; /* Damit wir bei Bedarf weitere Styles hinzufügen können */
     text-align: center; /* Text zentrieren */
     color: #000; /* Textfarbe */
-    line-height: 150px; /* Vertikale Zentrierung des Textes */
+    line-height: 100px; /* Vertikale Zentrierung des Textes */
     font-weight: bold; /* Fettdruck für den Text */
     border-radius: 10px; /* Abgerundete Ecken (optional) */
     opacity: 0.8; /* Halbdurchsichtig (optional) */
