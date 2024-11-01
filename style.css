@@ -20,7 +20,7 @@ body {
 .letter {
     width: 100px; /* Breite des Briefs, anpassbar */
     height: 150px; /* Höhe des Briefs, anpassbar */
-    background-image: url('Brief zu.jfif'); /* Standardmäßig geschlossen */
+    background-image: url('Briefumschlag.png'); /* Bild für den Brief hier angeben */
     background-size: cover; /* Bild anpassen */
     background-position: center; /* Bild zentrieren */
     display: inline-block;
@@ -40,22 +40,38 @@ body {
     transform: scale(1.2); /* Vergrößern beim Hover */
 }
 
-/* Ergebnisbereich (Zentrale Anzeige) */
-#result {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9); /* Halbtransparent */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    display: none; /* Anfangs versteckt */
-    z-index: 100; /* Damit es über anderen Elementen angezeigt wird */
-}
-
 /* Mobile Optimierung */
 @media (max-width: 600px) {
     h1 { font-size: 2em; }
     .letter { width: 80px; height: 120px; font-size: 1em; }
+}
+
+/* Modal-Stil */
+.modal {
+    display: none; /* Versteckt das Modal standardmäßig */
+    position: fixed; /* Positioniert das Modal relativ zum Viewport */
+    z-index: 1000; /* Z-Index für das Modal */
+    left: 0;
+    top: 0;
+    width: 100%; /* Breite des Modals */
+    height: 100%; /* Höhe des Modals */
+    overflow: auto; /* Aktiviert Scrollen bei Bedarf */
+    background-color: rgba(0, 0, 0, 0.8); /* Halbtransparentes Schwarz */
+    color: white; /* Textfarbe */
+    text-align: center; /* Text zentrieren */
+}
+
+/* Schließen-Button */
+.close {
+    color: white; /* Farbe des Schließen-Buttons */
+    float: right; /* Rechts ausrichten */
+    font-size: 28px; /* Schriftgröße */
+    font-weight: bold; /* Fettdruck */
+}
+
+.close:hover,
+.close:focus {
+    color: #f1f1f1; /* Farbe beim Hover */
+    text-decoration: none; /* Unterstreichung entfernen */
+    cursor: pointer; /* Zeiger ändern */
 }
