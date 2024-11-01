@@ -48,39 +48,8 @@ window.onclick = (event) => {
     if (event.target === modal) modal.style.display = "none";
 };
 
-// Funktion für Ziehungen und Speicherung
-function drawNewName() {
-    const recipient = participants[Math.floor(Math.random() * participants.length)];
-    saveDrawResult(recipient);
-    openModal(recipient);
-    letters.forEach(l => l.style.pointerEvents = 'none');
-}
-
-// Ergebnis speichern
-function saveDrawResult(name) {
-    set(ref(database, 'draws/' + deviceId), { name: name });
-}
-
-// Prüfen und Ziehen, wenn auf einen Brief geklickt wird
-function checkOrDraw() {
-    const dbRef = ref(database);
-    get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
-        if (snapshot.exists()) {
-            openModal(snapshot.val().name); // Bereits gezogener Name
-        } else {
-            drawNewName(); // Neuer Name
-        }
-    }).catch((error) => console.error("Fehler: ", error));
-}
-
-// Klick-Event für Briefe hinzufügen
-letters.forEach(letter => {
-    letter.addEventListener('click', checkOrDraw);
-});
-
-// Bestehenden Code oben unverändert lassen
-
-const drawnNames = new Set(); // Set zur Speicherung gezogener Namen
+// Set zur Speicherung gezogener Namen
+const drawnNames = new Set(); 
 
 // Funktion für Ziehungen und Speicherung
 function drawNewName() {
@@ -107,15 +76,39 @@ function drawNewName() {
     updateRemainingCount(); // Anzahl der verbleibenden Namen aktualisieren
 }
 
+// Ergebnis speichern
+function saveDrawResult(name) {
+    set(ref(database, 'draws/' + deviceId), { name: name });
+}
+
+// Prüfen und Ziehen, wenn auf einen Brief geklickt wird
+function checkOrDraw() {
+    const dbRef = ref(database);
+    get(child(dbRef, 'draws/' + deviceId)).then((snapshot) => {
+        if (snapshot.exists()) {
+            openModal(snapshot.val().name); // Bereits gezogener Name
+            drawnNames.add(snapshot.val().name); // Füge den bereits gezogenen Namen zum Set hinzu
+            updateRemainingCount(); // Aktualisiere die verbleibenden Namen
+            letters.forEach(letter => letter.style.pointerEvents = 'none'); // Briefe deaktivieren
+        } else {
+            drawNewName(); // Neuer Name
+        }
+    }).catch((error) => console.error("Fehler: ", error));
+}
+
 // Funktion zum Aktualisieren der verbleibenden Namen
 function updateRemainingCount() {
     const remaining = participants.length - drawnNames.size;
     document.getElementById("remainingCount").textContent = `Verbleibende Namen: ${remaining}`;
 }
 
-// Beim Laden der Seite den Zähler aktualisieren
+// Beim Laden der Seite den Zähler aktualisieren und prüfen
 window.onload = () => {
-    checkOrDraw();
-    updateRemainingCount();
+    updateRemainingCount(); // Zähler beim Laden aktualisieren
+    checkOrDraw(); // Ziehstatus überprüfen
 };
 
+// Klick-Event für Briefe hinzufügen
+letters.forEach(letter => {
+    letter.addEventListener('click', checkOrDraw);
+});
