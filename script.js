@@ -2,6 +2,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
+const music = document.getElementById('Backgroundmusic');
+music.volume = 0.1; // Lautstärke auf 10% setzen
+
 // Firebase-Konfiguration
 const firebaseConfig = {
     apiKey: "AIzaSyACPE3mLX_OkWr5dvfPzg7tv2C1rmB7pRo",
