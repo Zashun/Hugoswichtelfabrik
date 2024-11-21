@@ -24,8 +24,7 @@ const database = getDatabase(app);
 // Teilnehmerliste
 const participants = [
     "Basti", "Julia", "Dirk", "Steh-Vieh", "Romy",
-    "Christian", "Kai", "Sissi", "Bartosz",
-    "David", "Monika", "Sascha", "Violetta", "Sammy",
+    "Christian", "Kai", "Sissi", "Bartosz", "Sascha", "Violetta", "Sammy",
     "Sven", "Angi", "Andrea"
 ];
 
